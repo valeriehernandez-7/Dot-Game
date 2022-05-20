@@ -1,31 +1,29 @@
 package Server;
-import java.awt.event.*;
-import java.awt.BorderLayout;
 
-import javax.swing.JButton;
+import Common.*;
+
 import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import Common.Casilla;
-import Common.Constantes;
-import Common.Dot;
-import Common.Mapa;
-
-public class GUI implements ActionListener, Constantes{
+public class GUI implements ActionListener, Constantes {
 
     JFrame ventana;
     JButton next;
     Mapa mapa;
     Dot dot;
-    
-    public GUI(){
+
+    public GUI() {
 
         ventana = new JFrame();
+        ventana.setTitle("Dot Game - Server");
+
         mapa = new Mapa(this);
-
-
         ventana.add(mapa.panelTablero);
 
-        next = new JButton("continuar");
+        next = new JButton("CONTINUE");
         next.addActionListener(this);
         next.setActionCommand("next");
 
@@ -43,20 +41,19 @@ public class GUI implements ActionListener, Constantes{
 
         moveDot();
         run();
-
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {  
+    public void actionPerformed(ActionEvent e) {
     }
 
-    public void moveDot(){
+    public void moveDot() {
         mapa.tablero[dot.lastPosition[X]][dot.lastPosition[Y]].clearDot();
         mapa.tablero[dot.currentPosition[X]][dot.currentPosition[Y]].setAsDot();
     }
 
-    public void run(){
-        while (true){
+    public void run() {
+        while (true) {
             dot.move();
             moveDot();
             try {
@@ -66,5 +63,4 @@ public class GUI implements ActionListener, Constantes{
             }
         }
     }
-
 }
