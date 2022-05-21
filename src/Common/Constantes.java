@@ -11,7 +11,7 @@ public interface Constantes {
 
     int TABLERO_SIZE = 15;
 
-    Color TARGET_COLOR = Color.GREEN;
-    Color BG_COLOR = Color.LIGHT_GRAY;
-    Color DOT_COLOR = Color.PINK;
+    Color TARGET_COLOR = Color.CYAN;
+    Color BG_COLOR = Color.BLACK;
+    Color DOT_COLOR = Color.MAGENTA;
 }

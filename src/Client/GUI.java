@@ -3,8 +3,6 @@ package Client;
 import Common.*;
 
 import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectOutputStream;
@@ -13,7 +11,6 @@ import java.net.Socket;
 public class GUI implements ActionListener, Constantes {
 
     JFrame ventana;
-    JButton next;
     Mapa mapa;
     Dot dot;
     Target target;
@@ -28,22 +25,25 @@ public class GUI implements ActionListener, Constantes {
         mapa = new Mapa(this);
         ventana.add(mapa.panelTablero);
 
-        next = new JButton("CONTINUE");
-        next.setActionCommand("next");
-
-        ventana.add(next, BorderLayout.SOUTH);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.pack();
         ventana.setVisible(true);
 
+        dot = new Dot();
         target = new Target();
+
+        Server server = new Server(dot);
+        Thread hilo = new Thread(server);
+        hilo.start();
+
+        run();
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         mapa.tablero[target.coords[X]][target.coords[Y]].clearTarget();
-        ((Casilla) e.getSource()).setAsTarget();
-        target.coords = ((Casilla) e.getSource()).getCoords();
+        ((Casilla) event.getSource()).setAsTarget();
+        target.coords = ((Casilla) event.getSource()).getCoords();
 
         try {
             client = new Socket("127.0.0.1", 4444);
@@ -52,25 +52,23 @@ public class GUI implements ActionListener, Constantes {
             output.flush();
             output.close();
             client.close();
-        } catch (Exception ex) {
-            //TODO: handle exception
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
     public void moveDot() {
         mapa.tablero[dot.lastPosition[X]][dot.lastPosition[Y]].clearDot();
         mapa.tablero[dot.currentPosition[X]][dot.currentPosition[Y]].setAsDot();
-
     }
 
     public void run() {
         while (true) {
-            dot.move();
             moveDot();
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
-                //TODO: handle exception
+                System.out.println(e.getMessage());
             }
         }
     }

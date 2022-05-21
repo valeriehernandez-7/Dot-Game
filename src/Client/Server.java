@@ -1,7 +1,6 @@
-package Server;
+package Client;
 
 import Common.Dot;
-import Common.Target;
 
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -16,7 +15,7 @@ public class Server implements Runnable {
     public Server(Dot d) {
         dot = d;
         try {
-            server = new ServerSocket(4444);
+            server = new ServerSocket(4488);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -27,7 +26,10 @@ public class Server implements Runnable {
             while (true) {
                 client = server.accept();
                 input = new ObjectInputStream(client.getInputStream());
-                dot.target = (Target) input.readObject();
+                dot.lastPosition = dot.currentPosition;
+                Dot serverDot = (Dot) input.readObject();
+                dot.currentPosition = serverDot.currentPosition;
+                dot.lastPosition = serverDot.lastPosition;
                 input.close();
                 client.close();
             }
